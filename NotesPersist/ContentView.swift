@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var newNoteContent = ""
+    @State private var showExportAlert = false
     var noteManager = NoteManager(savedNotes: [])
     
     var body: some View {
@@ -42,6 +43,18 @@ struct ContentView: View {
                     .onDelete(perform: noteManager.deleteNote)
                 }
                 .navigationTitle("Notes")
+                .toolbar {
+                    ToolbarItem (placement:.topBarTrailing){
+                        Button {
+                            noteManager.exportNotesToPDF()
+                            showExportAlert = true
+                        } label: {
+                            Label ("", systemImage: "square.and.arrow.up")
+                        }
+
+                    }
+                    
+                }
                 
             }
             .padding()

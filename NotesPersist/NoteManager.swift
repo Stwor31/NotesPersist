@@ -21,7 +21,7 @@ class NoteManager {
     private func getFilePath(for note: Note) -> URL {
         getDocumentDirectory().appendingPathComponent("\(note.id).json")
     }
-    
+/// need to be added to Keynote slides
     func saveNote(content : String) {
         let newNote = Note(id: UUID(), content: content, timestamp:Date())
         let filePath = getFilePath(for: newNote)
@@ -35,7 +35,7 @@ class NoteManager {
         }
         
     }
-    
+    /// need to be added to Keynote slides
     func loadSavedNotes() {
         do {
             let files = try FileManager.default.contentsOfDirectory(at: getDocumentDirectory(), includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
@@ -50,7 +50,7 @@ class NoteManager {
         }
         
     }
-    
+    /// need to be added to Keynote slides
     func deleteNote(at offsets: IndexSet) {
         for index in offsets {
             let note = savedNotes[index]
@@ -64,5 +64,29 @@ class NoteManager {
             
         }
     }
+    
+    /// need to be review with UX. The share should show for the notes. Need to add details View to see notes and Fix ListView to show only the title of the notes.
+    ///
+    func exportNotesToPDF() {
+        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 612, height: 792))
+        let pdfData = pdfRenderer.pdfData { context in
+            context.beginPage()
+            var yOffset: CGFloat = 20
+            for note in savedNotes {
+                let paragraph = "\(note.formattedDate)\n\(note.content)"
+                let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14, weight: .regular)]
+                let attributedString = NSAttributedString(string: paragraph, attributes: attributes)
+                attributedString.draw(in: CGRect(x: 20, y: yOffset, width: 572, height: 1000))
+                yOffset += 60
+            }
+            
+            
+        }
+        
+        let filePath = getDocumentDirectory().appendingPathComponent("Notes.pdf")
+        try? pdfData.write(to: filePath)
+        
+    }
 }
 
+/// could also consider having edit option for the notes
