@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Model to be updated to have a Title for the list view display.
+
 struct Note : Identifiable, Codable {
     let id: UUID
     let content: String
